@@ -5,8 +5,10 @@ import com.healyn.auth.domain.OtpChannel;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,6 +43,24 @@ class SmtpOtpSenderTest {
         assertThat(msg.getFrom()).isEqualTo("no-reply@healyn.app");
         assertThat(msg.getSubject()).isEqualTo("Your code");
         assertThat(msg.getText()).contains("654321");
+    }
+
+    @Test
+    void sendsViaHttpProviderWhenConfigured() {
+        RestTemplate restTemplate = mock(RestTemplate.class);
+        RestTemplateBuilder builder = mock(RestTemplateBuilder.class);
+        when(builder.build()).thenReturn(restTemplate);
+        OtpMailProperties apiProps = new OtpMailProperties("no-reply@healyn.app", "Your code", "resend", "test-key",
+                "https://api.resend.com");
+
+        SmtpOtpSender sender = new SmtpOtpSender(provider(null), builder, apiProps);
+        sender.verifyConfigured();
+        sender.send("patient@example.com", "654321");
+
+        verify(restTemplate).postForEntity(
+                org.mockito.ArgumentMatchers.eq("https://api.resend.com/emails"),
+                org.mockito.ArgumentMatchers.any(),
+                org.mockito.ArgumentMatchers.eq(String.class));
     }
 
     @Test

@@ -107,6 +107,9 @@ healyn:
     email:
       from: ${HEALYN_OTP_EMAIL_FROM:}
       subject: ${HEALYN_OTP_EMAIL_SUBJECT:Your Healyn verification code}
+      provider: ${HEALYN_OTP_EMAIL_PROVIDER:smtp}
+      api-key: ${HEALYN_OTP_EMAIL_API_KEY:}
+      api-base-url: ${HEALYN_OTP_EMAIL_API_BASE_URL:}
   # Single-clinic reference frame (Phase 1). Used to derive clinic-local calendar days,
   # e.g. the YYYYMMDD stem of an Appointment Number. Instants are still stored as UTC.
   clinic:
