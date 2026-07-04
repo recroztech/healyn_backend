@@ -1,11 +1,13 @@
 package com.healyn.auth.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 import java.util.Locale;
 
 /** Sender identity and subject for OTP emails. SMTP transport is configured via {@code spring.mail.*}. */
 @ConfigurationProperties(prefix = "healyn.otp.email")
+@ConstructorBinding
 public record OtpMailProperties(String from, String subject, String provider, String apiKey,
                                 String apiBaseUrl) {
 

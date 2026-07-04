@@ -1,0 +1,41 @@
+# Gradle
+.gradle/
+build/
+out/
+target/
+
+# Gradle wrapper jars are kept
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment and secrets
+.env
+.env.*
+secrets/
+*.pem
+*.key
+*.p12
+*.jks
+
+# Test / temp output
+test-results/
+reports/
+tmp/
