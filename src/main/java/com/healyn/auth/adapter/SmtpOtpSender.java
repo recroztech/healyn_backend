@@ -4,6 +4,7 @@ import com.healyn.auth.config.OtpMailProperties;
 import com.healyn.auth.domain.OtpChannel;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
@@ -34,6 +35,7 @@ public class SmtpOtpSender implements ChannelOtpSender {
         this(mailSender, new RestTemplateBuilder(), props);
     }
 
+    @Autowired
     SmtpOtpSender(ObjectProvider<JavaMailSender> mailSender, RestTemplateBuilder restTemplateBuilder,
                  OtpMailProperties props) {
         this.mailSender = mailSender.getIfAvailable();
