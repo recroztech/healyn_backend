@@ -45,13 +45,13 @@ public class SmtpOtpSender implements ChannelOtpSender {
 
     @PostConstruct
     void verifyConfigured() {
-        if (props.from() == null || props.from().isBlank()) {
+        if (props.getFrom() == null || props.getFrom().isBlank()) {
             throw new IllegalStateException("healyn.otp.email.from must be set for OTP email delivery.");
         }
         if (props.usesHttpApi()) {
-            if (props.apiKey() == null || props.apiKey().isBlank()) {
+            if (props.getApiKey() == null || props.getApiKey().isBlank()) {
                 throw new IllegalStateException(
-                        "OTP email delivery via " + props.provider() + " requires healyn.otp.email.api-key.");
+                        "OTP email delivery via " + props.getProvider() + " requires healyn.otp.email.api-key.");
             }
             return;
         }
@@ -78,9 +78,9 @@ public class SmtpOtpSender implements ChannelOtpSender {
         }
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(props.from());
+        message.setFrom(props.getFrom());
         message.setTo(target);
-        message.setSubject(props.subject());
+        message.setSubject(props.getSubject());
         message.setText(text);
         // Never log the code (Hard Rule #3).
         mailSender.send(message);
@@ -90,22 +90,22 @@ public class SmtpOtpSender implements ChannelOtpSender {
         String endpoint = props.resolvedApiBaseUrl();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        if ("resend".equals(props.provider())) {
-            headers.setBearerAuth(props.apiKey());
+        if ("resend".equals(props.getProvider())) {
+            headers.setBearerAuth(props.getApiKey());
             Map<String, Object> body = new LinkedHashMap<>();
-            body.put("from", props.from());
+            body.put("from", props.getFrom());
             body.put("to", List.of(target));
-            body.put("subject", props.subject());
+            body.put("subject", props.getSubject());
             body.put("text", text);
             restTemplate.postForEntity(endpoint + "/emails", new HttpEntity<>(body, headers), String.class);
             return;
         }
 
-        headers.set("api-key", props.apiKey());
+        headers.set("api-key", props.getApiKey());
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("sender", Map.of("name", "Healyn", "email", props.from()));
+        body.put("sender", Map.of("name", "Healyn", "email", props.getFrom()));
         body.put("to", List.of(Map.of("email", target)));
-        body.put("subject", props.subject());
+        body.put("subject", props.getSubject());
         body.put("text", text);
         restTemplate.postForEntity(endpoint + "/v3/smtp/email", new HttpEntity<>(body, headers), String.class);
     }
