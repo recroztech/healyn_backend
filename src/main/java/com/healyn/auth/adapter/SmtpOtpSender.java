@@ -1,8 +1,9 @@
 package com.healyn.auth.adapter;
 
-import com.healyn.auth.config.OtpMailProperties;
-import com.healyn.auth.domain.OtpChannel;
-import jakarta.annotation.PostConstruct;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -15,9 +16,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.healyn.auth.config.OtpMailProperties;
+import com.healyn.auth.domain.OtpChannel;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  * Real EMAIL-channel OTP delivery over SMTP or a transactional email API (Resend/Brevo).
