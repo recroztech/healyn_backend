@@ -48,7 +48,8 @@ public class OtpService {
         OtpChallenge challenge = new OtpChallenge(
                 UuidV7.generate(), accountId, target, channel, purpose, sha256(code), now.plus(TTL));
         repo.save(challenge);
-        sender.send(target, channel, code);
+        System.out.print("email otp: " : code);
+        //sender.send(target, channel, code);
         return challenge.getId();
     }
 
