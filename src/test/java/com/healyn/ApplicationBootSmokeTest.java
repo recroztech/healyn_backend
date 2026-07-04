@@ -1,0 +1,78 @@
+package com.healyn;
+
+import com.healyn.auth.repository.AccountRepository;
+import com.healyn.auth.repository.DeviceSessionRepository;
+import com.healyn.auth.repository.OtpChallengeRepository;
+import com.healyn.appointments.repository.AppointmentEventRepository;
+import com.healyn.appointments.repository.AppointmentRepository;
+import com.healyn.audit.repository.AuditLogRepository;
+import com.healyn.availability.repository.AvailabilityRuleRepository;
+import com.healyn.availability.repository.BlackoutWindowRepository;
+import com.healyn.compliance.repository.AccountDeletionRequestRepository;
+import com.healyn.compliance.repository.ConsentRecordRepository;
+import com.healyn.compliance.repository.LegalDocumentRepository;
+import com.healyn.discussion.repository.DiscussionMessageAttachmentRepository;
+import com.healyn.discussion.repository.DiscussionMessageRepository;
+import com.healyn.discussion.repository.DiscussionReadMarkerRepository;
+import com.healyn.files.repository.FileObjectRepository;
+import com.healyn.notifications.repository.FcmTokenRepository;
+import com.healyn.notifications.repository.NotificationOutboxRepository;
+import com.healyn.notifications.repository.NotificationPreferencesRepository;
+import com.healyn.patients.repository.AccountAddressRepository;
+import com.healyn.patients.repository.AccountPatientRepository;
+import com.healyn.patients.repository.PatientRepository;
+import com.healyn.physio.repository.PhysioProfileRepository;
+import com.healyn.promotions.repository.PromotionRepository;
+import com.healyn.treatmentnotes.repository.TreatmentNoteRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
+
+@SpringBootTest(properties = {
+        "spring.autoconfigure.exclude="
+                + "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,"
+                + "org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration,"
+                + "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,"
+                + "org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration,"
+                + "org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration,"
+                + "org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration"
+})
+@ActiveProfiles("test")
+class ApplicationBootSmokeTest {
+
+    @MockBean AccountRepository accountRepository;
+    @MockBean DeviceSessionRepository deviceSessionRepository;
+    @MockBean OtpChallengeRepository otpChallengeRepository;
+    @MockBean PatientRepository patientRepository;
+    @MockBean AccountPatientRepository accountPatientRepository;
+    @MockBean AccountAddressRepository accountAddressRepository;
+    @MockBean AvailabilityRuleRepository availabilityRuleRepository;
+    @MockBean BlackoutWindowRepository blackoutWindowRepository;
+    @MockBean AppointmentRepository appointmentRepository;
+    @MockBean AppointmentEventRepository appointmentEventRepository;
+    @MockBean DiscussionMessageRepository discussionMessageRepository;
+    @MockBean DiscussionReadMarkerRepository discussionReadMarkerRepository;
+    @MockBean DiscussionMessageAttachmentRepository discussionMessageAttachmentRepository;
+    @MockBean FileObjectRepository fileObjectRepository;
+    @MockBean TreatmentNoteRepository treatmentNoteRepository;
+    @MockBean PhysioProfileRepository physioProfileRepository;
+    @MockBean PromotionRepository promotionRepository;
+    @MockBean NotificationOutboxRepository notificationOutboxRepository;
+    @MockBean FcmTokenRepository fcmTokenRepository;
+    @MockBean NotificationPreferencesRepository notificationPreferencesRepository;
+    @MockBean ConsentRecordRepository consentRecordRepository;
+    @MockBean AccountDeletionRequestRepository accountDeletionRequestRepository;
+    @MockBean LegalDocumentRepository legalDocumentRepository;
+    @MockBean AuditLogRepository auditLogRepository;
+    @MockBean StringRedisTemplate stringRedisTemplate;
+    // DataSource auto-config is excluded above, so the JdbcTemplate that
+    // AppointmentNumberGenerator uses for its counter upsert is mocked like the repositories.
+    @MockBean JdbcTemplate jdbcTemplate;
+
+    @Test
+    void contextLoads() {
+    }
+}

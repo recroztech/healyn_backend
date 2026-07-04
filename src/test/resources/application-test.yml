@@ -1,0 +1,30 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
+logging:
+  level:
+    root: WARN
+    com.healyn: INFO
+
+healyn:
+  notifications:
+    poller-enabled: false
+  # Rate limiting off by default for the shared-Redis integration suite (one fixed client IP,
+  # many requests). AuthRateLimitIntegrationTest re-enables it with tight limits + distinct IPs.
+  ratelimit:
+    enabled: false
+  password:
+    pepper: test-pepper-not-for-prod-test-pepper-not-for-prod
+  jwt:
+    private-key-path: ""
+    public-key-path: ""
