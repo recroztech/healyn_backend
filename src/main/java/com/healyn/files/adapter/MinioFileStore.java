@@ -39,7 +39,6 @@ public class MinioFileStore implements FileStorePort {
 
     @Override
     public String presignPut(String key, String contentType, Duration ttl) {
-        log.debug("Requesting presigned PUT URL: key='{}', contentType='{}', ttlSeconds={}", key, contentType, ttl.toSeconds());
         try {
             return presignClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(Method.PUT)
@@ -55,7 +54,6 @@ public class MinioFileStore implements FileStorePort {
 
     @Override
     public String presignGet(String key, String downloadFilename, Duration ttl) {
-        log.debug("Requesting presigned GET URL: key='{}', filename='{}', ttlSeconds={}", key, downloadFilename, ttl.toSeconds());
         try {
             return presignClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(Method.GET)

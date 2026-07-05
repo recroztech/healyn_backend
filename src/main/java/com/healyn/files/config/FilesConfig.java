@@ -19,14 +19,7 @@ public class FilesConfig {
     @Bean
     @Primary
     public MinioClient minioClient(HealynS3Properties props, Environment env) {
-        log.info("S3 config: endpoint='{}', publicEndpoint='{}', resolvedPresignEndpoint='{}', region='{}', bucket='{}', presignTtlSeconds={}'",
-                props.endpoint(), props.publicEndpoint(), props.presignEndpoint(), props.region(), props.bucket(), props.presignTtlSeconds());
-        log.info("S3 env vars present: HEALYN_S3_ENDPOINT={}, HEALYN_S3_PUBLIC_ENDPOINT={}, HEALYN_S3_REGION={}, HEALYN_S3_ACCESS_KEY={}, HEALYN_S3_SECRET_KEY={}, HEALYN_S3_BUCKET={}",
-                env.containsProperty("HEALYN_S3_ENDPOINT"),
-                env.containsProperty("HEALYN_S3_PUBLIC_ENDPOINT"),
-                env.containsProperty("HEALYN_S3_REGION"),
-                
-                env.containsProperty("HEALYN_S3_BUCKET"));
+
         if (props.endpoint() == null || props.endpoint().isBlank()) {
             log.warn("HEALYN_S3_ENDPOINT is not configured or empty. Using default endpoint may fail in production.");
         }
