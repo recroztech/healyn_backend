@@ -9,6 +9,8 @@ import io.minio.RemoveObjectArgs;
 import io.minio.StatObjectArgs;
 import io.minio.errors.ErrorResponseException;
 import io.minio.http.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import java.util.Optional;
 @Component
 public class MinioFileStore implements FileStorePort {
 
+    private static final Logger log = LoggerFactory.getLogger(MinioFileStore.class);
     private static final String NO_SUCH_KEY = "NoSuchKey";
 
     private final MinioClient client;
@@ -36,6 +39,7 @@ public class MinioFileStore implements FileStorePort {
 
     @Override
     public String presignPut(String key, String contentType, Duration ttl) {
+        log.debug("Requesting presigned PUT URL: key='{}', contentType='{}', ttlSeconds={}", key, contentType, ttl.toSeconds());
         try {
             return presignClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(Method.PUT)
@@ -44,12 +48,14 @@ public class MinioFileStore implements FileStorePort {
                     .expiry((int) ttl.toSeconds())
                     .build());
         } catch (Exception e) {
+            log.error("Failed to generate presigned PUT URL for key='{}'.", key, e);
             throw new FileStorageException("Failed to presign PUT for " + key, e);
         }
     }
 
     @Override
     public String presignGet(String key, String downloadFilename, Duration ttl) {
+        log.debug("Requesting presigned GET URL: key='{}', filename='{}', ttlSeconds={}", key, downloadFilename, ttl.toSeconds());
         try {
             return presignClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(Method.GET)
@@ -61,6 +67,7 @@ public class MinioFileStore implements FileStorePort {
                             "attachment; filename=\"" + downloadFilename + "\""))
                     .build());
         } catch (Exception e) {
+            log.error("Failed to generate presigned GET URL for key='{}'.", key, e);
             throw new FileStorageException("Failed to presign GET for " + key, e);
         }
     }

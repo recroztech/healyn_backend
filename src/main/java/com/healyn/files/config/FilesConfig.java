@@ -1,19 +1,44 @@
 package com.healyn.files.config;
 
 import io.minio.MinioClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 
 @Configuration
 @EnableConfigurationProperties(HealynS3Properties.class)
 public class FilesConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(FilesConfig.class);
+
     /** Client for server-side object operations (stat / read / delete). */
     @Bean
     @Primary
-    public MinioClient minioClient(HealynS3Properties props) {
+    public MinioClient minioClient(HealynS3Properties props, Environment env) {
+        log.info("S3 config: endpoint='{}', publicEndpoint='{}', resolvedPresignEndpoint='{}', region='{}', bucket='{}', presignTtlSeconds={}'",
+                props.endpoint(), props.publicEndpoint(), props.presignEndpoint(), props.region(), props.bucket(), props.presignTtlSeconds());
+        log.info("S3 env vars present: HEALYN_S3_ENDPOINT={}, HEALYN_S3_PUBLIC_ENDPOINT={}, HEALYN_S3_REGION={}, HEALYN_S3_ACCESS_KEY={}, HEALYN_S3_SECRET_KEY={}, HEALYN_S3_BUCKET={}",
+                env.containsProperty("HEALYN_S3_ENDPOINT"),
+                env.containsProperty("HEALYN_S3_PUBLIC_ENDPOINT"),
+                env.containsProperty("HEALYN_S3_REGION"),
+                
+                env.containsProperty("HEALYN_S3_BUCKET"));
+        if (props.endpoint() == null || props.endpoint().isBlank()) {
+            log.warn("HEALYN_S3_ENDPOINT is not configured or empty. Using default endpoint may fail in production.");
+        }
+        if (props.accessKey() == null || props.accessKey().isBlank()) {
+            log.warn("HEALYN_S3_ACCESS_KEY is not configured or empty.");
+        }
+        if (props.secretKey() == null || props.secretKey().isBlank()) {
+            log.warn("HEALYN_S3_SECRET_KEY is not configured or empty.");
+        }
+        if (props.publicEndpoint() == null || props.publicEndpoint().isBlank()) {
+            log.info("HEALYN_S3_PUBLIC_ENDPOINT is not configured; presigned URLs will use HEALYN_S3_ENDPOINT.");
+        }
         return build(props.endpoint(), props);
     }
 
