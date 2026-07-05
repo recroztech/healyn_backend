@@ -5,8 +5,8 @@ spring:
     active: ${HEALYN_PROFILE:local}
   datasource:
     url: jdbc:postgresql://${HEALYN_DB_HOST:localhost}:${HEALYN_DB_PORT:5432}/${HEALYN_DB_NAME:healyn}
-    username: ${HEALYN_DB_USER:postgres}
-    password: ${HEALYN_DB_PASSWORD:postgres}
+    username: ${HEALYN_DB_USER:pharma}
+    password: ${HEALYN_DB_PASSWORD:pharma}
     hikari:
       maximum-pool-size: 20
       minimum-idle: 4

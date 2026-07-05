@@ -74,6 +74,7 @@ public class SmtpOtpSender implements ChannelOtpSender {
         String text = "Your Healyn verification code is " + code
                 + ".\n\nIt expires in 5 minutes. If you did not request this, you can ignore this email.";
 
+        System.out.println(props.getProvider() + " : baseUrl : " + props.getApiBaseUrl() );
         if (props.usesHttpApi()) {
             sendViaHttpApi(target, text);
             return;
@@ -108,7 +109,8 @@ public class SmtpOtpSender implements ChannelOtpSender {
         body.put("sender", Map.of("name", "Healyn", "email", props.getFrom()));
         body.put("to", List.of(Map.of("email", target)));
         body.put("subject", props.getSubject());
-        body.put("text", text);
+        // Brevo's SMTP API expects either `htmlContent` or `textContent`.
+        body.put("textContent", text);
         restTemplate.postForEntity(endpoint + "/v3/smtp/email", new HttpEntity<>(body, headers), String.class);
     }
 }
